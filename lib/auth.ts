@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { fetchUser } from "./data";
+import bcrypt from "bcryptjs"; // Correct import for bcryptjs
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   theme: {
