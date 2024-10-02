@@ -1,15 +1,51 @@
+import { addQuestion } from "@/lib/actions";
+import { useState } from "react";
+
 export function AskQuestion({ topic }: { topic: string }) {
+  const [question, setQuestion] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("title", question);
+      formData.append("topic_id", topic);
+
+      await addQuestion(formData); // Trigger the server action to add the question
+      setQuestion(""); // Clear the input after successful submission
+    } catch (err) {
+      setError("Failed to add the question. Please try again.");
+      console.error("Error adding question:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <form className="relative my-8">
+    <form className="relative my-8" onSubmit={handleSubmit}>
+      <input
+        type="hidden"
+        name="topic_id"
+        value={topic}
+      />
       <input
         type="text"
         name="title"
-        placeholder="Ask a question"
-        className="mt-1 block w-full rounded-md border border-atlas-white-300 bg-inherit py-3 pl-3 pr-28 text-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring focus:ring-atlas-teal"
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+        placeholder="Enter your question"
+        required
+        className="border p-2"
       />
-      <button className="absolute right-2 top-2 flex h-10 w-24 items-center justify-center rounded-md border bg-secondary px-4 text-lg text-white focus:bg-secondary">
-        Ask
+      <button type="submit" className="btn" disabled={isLoading}>
+        {isLoading ? "Submitting..." : "Ask"}
       </button>
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </form>
   );
 }
