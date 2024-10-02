@@ -1,3 +1,5 @@
+"use client";
+
 import { addQuestion } from "@/lib/actions";
 import { useState } from "react";
 
