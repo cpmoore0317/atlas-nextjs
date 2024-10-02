@@ -1,5 +1,7 @@
 import Image from "next/image";
 import placeholder from "@/assets/placeholder.svg";
+import { signIn } from "@/lib/auth"; // Import the signIn function from auth
+import Link from "next/link"; // Import Link for client-side navigation
 
 export default function Page() {
   return (
@@ -14,17 +16,31 @@ export default function Page() {
               Discover our suite of tools and services to build, deploy, and scale your web applications with ease.
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <form>
+              {/* Updated form for signing in */}
+              <form
+                action={async () => {
+                  "use server";
+                  await signIn("default", { redirectTo: "/ui" }); // Redirect to /ui after sign-in
+                }}
+              >
                 <button className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow">
                   Sign In
                 </button>
               </form>
-              <a href="/about" className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground">
+              {/* Updated Link component for Learn More */}
+              <Link
+                href="/about"
+                className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground"
+              >
                 Learn More
-              </a>
+              </Link>
             </div>
           </div>
-          <Image src={placeholder} alt="Hero" className="mx-auto aspect-square overflow-hidden rounded-xl object-cover w-full max-w-[550px]" />
+          <Image
+            src={placeholder}
+            alt="Hero"
+            className="mx-auto aspect-square overflow-hidden rounded-xl object-cover w-full max-w-[550px]"
+          />
         </div>
       </div>
     </main>
